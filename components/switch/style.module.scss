@@ -1,0 +1,22 @@
+.switch {
+  border: 1.5px solid #b3b3b3 !important;
+  &:global(.ant-switch) {
+    border-radius: 4px !important;
+    background-color: #e6e6e6 !important;
+  }
+  &:global(.ant-switch-checked) {
+    background-color: #f15a22 !important;
+    border-radius: 4px !important;
+  }
+  :global(.ant-switch-handle) {
+    top: 0px !important;
+    width: 19px !important;
+    height: 20px !important;
+    &::before {
+      top: 0px !important;
+      right: -1px !important;
+      border-radius: 4px !important;
+      left: -1px !important;
+    }
+  }
+}

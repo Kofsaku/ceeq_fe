@@ -1,0 +1,13 @@
+.tabs {
+  :global(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+    color: #00a3bf !important;
+    font-weight: 700 !important;
+    line-height: 0px !important;
+  }
+  :global(.ant-tabs-tab-active) {
+    padding: 0px 16px !important;
+  }
+  :global(.ant-tabs-ink-bar) {
+    background-color: #00a3bf !important;
+  }
+}

@@ -1,0 +1,31 @@
+:global(.ant-checkbox:not(.ant-checkbox-disabled)) {
+  &:hover {
+    :global(.ant-checkbox-inner) {
+      border-color: #f15a22 !important;
+    }
+  }
+}
+
+:global(.ant-checkbox) {
+  :global(.ant-checkbox-inner) {
+    &:after {
+      border-color: #f15a22 !important;
+    }
+  
+  }
+}
+
+:global(.ant-checkbox-checked) {
+  :global(.ant-checkbox-inner) {
+    background-color: #fff !important;
+    border-color: #f15a22 !important;
+  }
+}
+  
+:global(.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled)) {
+  &:hover {
+    :global(.ant-checkbox-inner) {
+      border-color: #f15a22 !important;
+    }
+  }
+}

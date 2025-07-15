@@ -1,0 +1,93 @@
+.drawer {
+  :global(.ant-drawer-header-title) {
+    flex-direction: row-reverse !important;
+  }
+
+  :global(.ant-drawer-header) {
+    background-color: #666666 !important;
+    color: #fff !important;
+
+    span {
+      color: #fff !important;
+    }
+  }
+  :global(.ant-drawer-footer) {
+    padding: 0 !important;
+  }
+}
+
+.actionItem {
+  &:hover {
+    background-color: #1a1a1a !important;
+    border-radius: 0 !important;
+    .icon {
+      filter: brightness(255) !important;
+    }
+    p {
+      color: #fff !important;
+    }
+  }
+}
+
+.buttonContainer {
+  button {
+    position: relative;
+    &::before {
+      position: absolute;
+      right: 55%;
+      top: 26px;
+      content: '';
+      display: block;
+      width: 1px;
+      height: 30px;
+      background-color: #666666;
+    }
+    &::after {
+      position: absolute;
+      right: 55%;
+      bottom: 24px;
+      content: '';
+      display: block;
+      width: 1px;
+      height: 32px;
+      background-color: #666666;
+    }
+  }
+}
+
+.buttonContainerFlex {
+  position: relative;
+  .horizontalLine {
+    position: absolute;
+    right: 50.5%;
+    top: -7px;
+    content: '';
+    display: block;
+    width: 102.5%;
+    height: 1px;
+    background-color: #666666;
+  }
+  button {
+    position: relative;
+    &::before {
+      position: absolute;
+      right: 55%;
+      top: 26px;
+      content: '';
+      display: block;
+      width: 1px;
+      height: 30px;
+      background-color: #666666;
+    }
+    &::after {
+      position: absolute;
+      right: 55%;
+      bottom: 24px;
+      content: '';
+      display: block;
+      width: 1px;
+      height: 15px;
+      background-color: #666666;
+    }
+  }
+}

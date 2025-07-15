@@ -1,0 +1,16 @@
+:global(.ant-picker-header-view) {
+  display: flex !important;
+  justify-content: center !important;
+  flex-direction: row-reverse !important;
+}
+
+:global(.ant-picker-footer) {
+  display: none !important; // Ẩn toàn bộ footer nếu cần
+}
+
+:global(.ant-picker-cell-selected) {
+  :global(.ant-picker-cell-inner) {
+    background-color: #1a1a1a !important;
+    border-radius: 20px !important;
+  }
+}

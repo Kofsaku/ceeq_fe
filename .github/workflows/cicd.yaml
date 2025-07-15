@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+env:
+  ${{ insert }}: ${{ vars }}
+  ${{ insert }}: ${{ secrets }}
+  IMAGE_TAG: develop
+
+jobs:
+  secret_detection:
+    continue-on-error: true
+    if: vars.AUTODEVOPS_DISABLE_SCAN != 'true'
+    runs-on: ${{ vars.RUNNER || 'ubuntu-latest' }}
+    container:
+      image: zricethezav/gitleaks
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Run Gitleaks
+        run: gitleaks detect -v --no-git
+
+  trivy_scan:
+    continue-on-error: true
+    if: vars.AUTODEVOPS_DISABLE_SCAN != 'true'
+    runs-on: ${{ vars.RUNNER || 'ubuntu-latest' }}
+    steps:
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          hide-progress: true
+
+  build:
+    runs-on: ${{ vars.RUNNER || 'ubuntu-latest' }}
+    environment:
+      name: ${{ github.ref_name }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Run docker build
+        run: |
+          docker buildx inspect container || docker buildx create --name container --driver=docker-container --use --bootstrap
+          docker buildx inspect --bootstrap
+          rm -rf .env .env*
+
+          export SHORT_SHA=$(git rev-parse --short $GITHUB_SHA)
+          export DOCKER_IMAGE_URI=$DOCKER_IMAGE:$IMAGE_TAG
+
+          docker buildx build -f Dockerfile \
+            --cache-to "type=gha, mode=max" \
+            --cache-from "type=gha" \
+            --push -t $DOCKER_IMAGE_URI -t $DOCKER_IMAGE_URI-$SHORT_SHA \
+            --platform linux/amd64 --provenance false .
+
+  deploy:
+    needs: build
+    runs-on: ${{ vars.RUNNER || 'ubuntu-latest' }}
+    environment:
+      name: ${{ github.ref_name }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
+      - name: Run commands
+        run: |
+          echo "$SSH_CMD" | tr -d '\r' | bash

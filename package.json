@@ -1,0 +1,44 @@
+{
+  "name": "ceeq",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbo",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/icons": "5.x",
+    "@tanstack/react-query": "^5.80.7",
+    "@types/js-cookie": "^3.0.6",
+    "antd": "^5.26.0",
+    "axios": "^1.10.0",
+    "dayjs": "^1.11.13",
+    "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
+    "next": "15.3.3",
+    "pusher-js": "^8.4.0",
+    "rc-util": "^5.44.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.6.2",
+    "react-toastify": "^11.0.5",
+    "sass": "^1.89.2",
+    "sass-loader": "^16.0.5",
+    "tailwind-merge": "^3.3.1",
+    "uuidv4": "^6.2.13",
+    "zustand": "^5.0.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.1.10",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

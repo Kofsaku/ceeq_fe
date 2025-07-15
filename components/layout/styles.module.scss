@@ -1,0 +1,84 @@
+.adminLayout {
+  :global(.ant-layout-header) {
+    padding: 0 !important;
+    background-color: #2290f1;
+  }
+  :global(.ant-layout-sider) {
+    background-color: #2290f1 !important;
+  }
+  :global(.ant-layout-sider-children) {
+    background-color: #2290f1 !important;
+  }
+  :global(.ant-menu-item) {
+    margin: 0 !important;
+    width: 100% !important;
+    color: #fff;
+    font-weight: 700 !important;
+  }
+  :global(.ant-menu-item-selected) {
+    background-color: #f2f2f2 !important;
+    border-radius: 0 !important;
+    color: #000;
+    font-weight: 700 !important;
+  }
+}
+
+.webLayout {
+  :global(.ant-layout-header) {
+    padding: 0 !important;
+    background-color: #333333;
+  }
+  :global(.ant-layout-sider) {
+    background-color: #333333 !important;
+  }
+  :global(.ant-layout-sider-children) {
+    background-color: #333333 !important;
+  }
+  :global(.ant-menu-item),
+  :global(.ant-menu-submenu-title) {
+    margin: 0 !important;
+    width: 100% !important;
+    color: #fff;
+    font-weight: 700 !important;
+    &:hover {
+      background-color: #f2f2f2 !important;
+      border-radius: 0 !important;
+      .icon {
+        filter: brightness(0) !important;
+      }
+    }
+  }
+  :global(.ant-menu-item-selected) {
+    background-color: #f2f2f2 !important;
+    border-radius: 0 !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+    .icon {
+      filter: brightness(0) !important;
+    }
+  }
+  :global(.ant-menu-submenu-title) {
+    color: #fff !important;
+    &:hover {
+      background-color: #f2f2f2 !important;
+      color: #000 !important;
+    }
+  }
+  :global(.ant-menu-item-only-child) {
+    // color: #000 !important;
+  }
+  :global(.ant-menu-submenu-popup) {
+    background-color: #333333 !important;
+  }
+}
+
+.formLogin {
+  :global(.ant-form-item-label > label.ant-form-item-required) {
+    color: #666666 !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+  }
+  :global(.ant-btn-loading-icon) {
+    height: inherit !important;
+  }
+}

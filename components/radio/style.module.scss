@@ -1,0 +1,28 @@
+.radio {
+  :global(.ant-radio-inner) {
+    background-color: #ffffff !important;
+
+    &::after {
+      background-color: #f15a22 !important;
+      width: 20px !important;
+      height: 20px !important;
+      margin-block-start: -10px !important;
+      margin-inline-start: -10px !important;
+    }
+  }
+  :global(.ant-radio-checked) {
+    :global(.ant-radio-inner) {
+      border-color: #f15a22 !important;
+    }
+    &::after {
+      border: 1px solid #f15a22 !important;
+    }
+  }
+  &:global(.ant-radio-wrapper) {
+    &:hover {
+      :global(.ant-radio-inner) {
+        border-color: #f15a22 !important;
+      }
+    }
+  }
+}
