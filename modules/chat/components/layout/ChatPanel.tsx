@@ -80,13 +80,13 @@ const ChatPanel = ({
 
   // Tự động scroll xuống cuối khi có tin nhắn mới
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
   const handleSendSuccess = (lastMessage: any) => {
     onSuccessMarkAsRead(lastMessage);
     setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
     }, 100);
   };
 

@@ -34,6 +34,11 @@ const menuItems: MenuProps["items"] = [
     label: "請求管理",
   },
   {
+    key: "/chat",
+    icon: <SvgIcon path="/admin/chat.svg" className={styles.icon} />,
+    label: "コミュニケーション",
+  },
+  {
     key: "/setting",
     icon: <SvgIcon path="/admin/settings.svg" className={styles.icon} />,
     label: "設定",
