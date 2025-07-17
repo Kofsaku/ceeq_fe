@@ -42,6 +42,15 @@ const menuItems: MenuProps["items"] = [
     key: "/setting",
     icon: <SvgIcon path="/admin/settings.svg" className={styles.icon} />,
     label: "設定",
+    children: [
+      { key: "/", label: "アカウント" },
+      { key: "/", label: "レイアウト" },
+      { key: "/", label: "カスタムプロパティ" },
+      { key: "/", label: "契約" },
+      { key: "/", label: "データ連携" },
+      { key: "/setting", label: "グループアカウント連携" },
+      { key: "/", label: "権限" },
+    ],
   },
 ];
 
@@ -64,11 +73,11 @@ const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
-  useEffect(() => {
-    if (!token) {
-      router.push("/auth/login");
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     router.push("/auth/login");
+  //   }
+  // }, [token]);
 
   const signOut = () => {
     Cookies.remove(ECookieKeys.TOKEN);
