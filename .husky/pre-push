@@ -1,0 +1,15 @@
+# Lấy tên branch hiện tại
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Định nghĩa regex cho format branch
+branch_regex="^(feature|hotfix)\/[a-z0-9][a-z0-9-]*[a-z0-9]$"
+
+if ! echo "$current_branch" | grep -E "$branch_regex"; then
+  echo "❌ Error: Branch name '$current_branch' does not follow the required format."
+  echo "For features: feature/{feature-name} (e.g., feature/get-user-api)"
+  echo "For bug fixes: hotfix/{bug-fix-name} (e.g., hotfix/login-error)"
+  echo "Allowed characters: lowercase letters, numbers, and hyphens (must not start or end with a hyphen)."
+  exit 1
+fi
+
+echo "✅ Branch name '$current_branch' is valid."
