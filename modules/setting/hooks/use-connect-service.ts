@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { ProviderName, Service } from "../type";
 import { BASE_API, CALLBACK_URL } from "@/const/env.const";
 
-const CALLBACK_URL_SUCCESS = `${CALLBACK_URL}/web/setting`;
-const CALLBACK_URL_ERROR = `${CALLBACK_URL}/web/setting`;
+const CALLBACK_URL_SUCCESS = `${CALLBACK_URL}/setting`;
+const CALLBACK_URL_ERROR = `${CALLBACK_URL}/setting`;
 const LIST_AUTH_PROVIDERS = [
   ProviderName.LINE,
   ProviderName.GMAIL,
