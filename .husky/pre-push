@@ -2,7 +2,7 @@
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
 # Định nghĩa regex cho format branch
-branch_regex="^(feature|hotfix)\/[a-z0-9][a-z0-9-]*[a-z0-9]$"
+branch_regex="^(feature|hotfix)\/[a-z0-9\u4e00-\u9fff][a-z0-9\u4e00-\u9fff-]*[a-z0-9\u4e00-\u9fff]$"
 
 if ! echo "$current_branch" | grep -E "$branch_regex"; then
   echo "❌ Error: Branch name '$current_branch' does not follow the required format."
