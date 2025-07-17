@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "antd";
 import CeeqButton from "@/components/button";
 import {
@@ -11,6 +11,8 @@ import { useSequenceStore } from "@/store/use-sequence-store";
 import ModalAddMsgTpl from "./modal-add-msg-tpl";
 import { updateTree, insertChildrenBetween } from "@/utils/common";
 import { uuid } from "uuidv4";
+import { useGetListMsg } from "@/modules/sequence/hooks/use-get-list-msg";
+import dayjs from "dayjs";
 
 const MessageItem = ({
   content,
@@ -78,8 +80,18 @@ const MessageItem = ({
 };
 
 function MessageTemplates() {
-  const { messageSample } = useSequenceStore();
+  const { messageSample, setMessageSample } = useSequenceStore();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const { data } = useGetListMsg();
+  useEffect(() => {
+    if (data) {
+      const newData = data.map((item) => ({
+        ...item,
+        date: dayjs(item.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+      }));
+      setMessageSample(newData);
+    }
+  }, [data]);
   return (
     <div>
       <h3 className="text-[#231815] font-bold text-lg">
