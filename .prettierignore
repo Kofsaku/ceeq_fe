@@ -1,0 +1,1 @@
+node_modules dist build coverage .next .husky .vscode .env.local .env
