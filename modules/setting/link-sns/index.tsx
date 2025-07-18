@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Service, ServiceName, ProviderName } from "../type";
 import { LinkOutlined, UnlockOutlined } from "@ant-design/icons";
+import { ServiceModal } from "../components/service-modal";
 
 const { Title, Text } = Typography;
 
@@ -165,8 +166,7 @@ export function LinkSns() {
     handleCancel,
   } = useServiceModals();
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const { data: dataExternal, isLoading } = useExternalAccounts();
+  const { data: dataExternal } = useExternalAccounts();
   const [dataServicesAccount, setDataServicesAccount] =
     useState<Service[]>(servicesAccount);
   const [dataServicesCompany, setDataServicesCompany] =
@@ -237,12 +237,16 @@ export function LinkSns() {
   ];
   return (
     <SettingLayout isLoading={false}>
-      <Card className="shadow-sm">
-        <Title level={4} className="mb-4 text-gray-800">
-          外部ツール連携
-        </Title>
-        <Tabs defaultActiveKey="1" items={tabItems} className="mb-6" />
-      </Card>
+      <Title level={4} className="mb-4 text-gray-800">
+        外部ツール連携
+      </Title>
+      <Tabs defaultActiveKey="1" items={tabItems} className="mb-6" />
+      <ServiceModal
+        open={open}
+        actionType={actionType}
+        selectedService={selectedService}
+        onCancel={handleCancel}
+      />
     </SettingLayout>
   );
 }
