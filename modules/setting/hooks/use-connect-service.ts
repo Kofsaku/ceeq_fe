@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { ProviderName, Service } from "../type";
 import { BASE_API, CALLBACK_URL } from "@/const/env.const";
 
-const CALLBACK_URL_SUCCESS = `${CALLBACK_URL}/setting`;
-const CALLBACK_URL_ERROR = `${CALLBACK_URL}/setting`;
+const CALLBACK_URL_SUCCESS = `${CALLBACK_URL}/setting/link-sns`;
+const CALLBACK_URL_ERROR = `${CALLBACK_URL}/setting/link-sns`;
 const LIST_AUTH_PROVIDERS = [
   ProviderName.LINE,
   ProviderName.GMAIL,
@@ -30,10 +30,10 @@ const generateRedirectUrl = (service: Service, userId?: number): string => {
   const basePath = LIST_AUTH_PROVIDERS.includes(provider)
     ? `${BASE_API}/auth/sns/${service.provider}/redirect`
     : provider === ProviderName.LINE_OA
-    ? (() => {
-        throw new Error(`Provider ${service.name} not supported`);
-      })()
-    : `${BASE_API}/api/user/${cleanProvider}/redirect`;
+      ? (() => {
+          throw new Error(`Provider ${service.name} not supported`);
+        })()
+      : `${BASE_API}/api/user/${cleanProvider}/redirect`;
 
   return `${basePath}?${providerQuery}${query.toString()}`;
 };

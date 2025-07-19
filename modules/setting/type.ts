@@ -8,6 +8,8 @@ export enum ServiceName {
   X = "X",
   GOOGLE_MEET = "Google Meet",
   ZOOM = "Zoom",
+  GOOGLE_CALENDAR = "google_calendar",
+  OUTLOOK_CALENDAR = "outlook_calendar",
 }
 
 export enum ProviderName {
@@ -24,6 +26,8 @@ export enum ProviderName {
   LINE_OA = "line_oa",
   GMAIL_OA = "google_oa",
   OUTLOOK_OA = "outlook_oa",
+  GOOGLE_CALENDAR = "google_calendar",
+  OUTLOOK_CALENDAR = "outlook_calendar",
 }
 
 export type Service = {
@@ -76,4 +80,9 @@ export interface ExternalAccountsResponse {
   success: boolean;
   message: string;
   data: Record<string, ExternalAccount[]>;
+}
+
+export enum ProviderCalendarConnect {
+  google_calendar = "Google",
+  outlook_calendar = "Outlook",
 }

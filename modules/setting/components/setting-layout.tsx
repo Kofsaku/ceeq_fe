@@ -20,7 +20,7 @@ const actionSetting = [
   },
   {
     label: "カレンダー連携",
-    url: "/setting/calendar",
+    url: "/setting/calendar-connect",
   },
   {
     label: "外部ツール連携",
@@ -57,7 +57,7 @@ function SettingLayout({
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
-            <Card className="shadow-sm">
+            <Card className="shadow-sm h-[calc(100vh-15rem)] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <Avatar
                   size={64}
@@ -91,7 +91,9 @@ function SettingLayout({
           </div>
 
           <div className="lg:col-span-3">
-            <Card className="shadow-sm">{children}</Card>
+            <Card className="shadow-sm h-[calc(100vh-15rem)] overflow-y-auto">
+              {children}
+            </Card>
           </div>
         </div>
       </div>
