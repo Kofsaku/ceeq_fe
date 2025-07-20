@@ -35,6 +35,13 @@ const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
       label: "シーケンス",
     },
     {
+      key: "/calendar",
+      icon: (
+        <SvgIcon path="/icons/calendar_month.svg" className={styles.icon} />
+      ),
+      label: "カレンダー",
+    },
+    {
       key: "3",
       icon: <SvgIcon path="/admin/receipt_long.svg" className={styles.icon} />,
       label: "請求管理",
@@ -220,7 +227,7 @@ const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
           </Drawer>
         )}
 
-        <Layout className={twMerge("px-8", isMobile && "!px-4")}>
+        <Layout>
           <Content
             className={twMerge("py-8 overflow-auto", isMobile && "!py-4")}
             style={{ minHeight: "calc(100vh - 64px)" }}
