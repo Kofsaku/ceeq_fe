@@ -1,0 +1,51 @@
+:global(.ant-picker-header-view) {
+  display: flex !important;
+  justify-content: center !important;
+  flex-direction: row-reverse !important;
+}
+
+:global(.ant-picker-footer) {
+  display: none !important; // Ẩn toàn bộ footer nếu cần
+}
+
+:global(.ant-picker-cell-selected) {
+  :global(.ant-picker-cell-inner) {
+    background-color: #1a1a1a !important;
+    border-radius: 20px !important;
+  }
+}
+
+:global(.ant-picker-cell-today) {
+  :global(.ant-picker-cell-inner) {
+    &::before {
+      border-color: #1a1a1a !important;
+      border-radius: 20px !important;
+    }
+  }
+}
+
+:global(.ant-picker-content) {
+  thead {
+    tr {
+      th {
+        font-weight: 700 !important;
+        background-color: #f2f2f2;
+      }
+    }
+  }
+  tbody {
+    tr {
+      td {
+        background-color: #f2f2f2;
+      }
+    }
+  }
+}
+
+:global(.ant-picker-panel) {
+  border-top: none !important;
+}
+
+:global(.ant-picker-body) {
+  background-color: #f2f2f2;
+}

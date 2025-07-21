@@ -12,6 +12,7 @@ import { useSequenceStore } from "@/store/use-sequence-store";
 import { toast } from "react-toastify";
 import { useCreateSequence } from "./hooks/use-create-sequence";
 import { useSequenceCondition } from "./hooks/use-get-condition";
+import { generateTimeOptions } from "@/utils/generate-data";
 
 type FieldType = {
   sequence_name?: string;
@@ -26,19 +27,6 @@ type FieldType = {
   schedule_option?: string;
   schedule_start_date?: string;
   schedule_after_days?: number;
-};
-
-export const generateTimeOptions = () => {
-  const times = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      const timeString = `${hour.toString().padStart(2, "0")}:${minute
-        .toString()
-        .padStart(2, "0")}`;
-      times.push(timeString);
-    }
-  }
-  return times.map((time) => ({ value: time, label: time }));
 };
 
 function Settings() {

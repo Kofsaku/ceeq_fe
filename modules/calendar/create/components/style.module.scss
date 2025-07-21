@@ -13,3 +13,21 @@
     filter: drop-shadow(2px 0 0px #0000001a);
   }
 }
+
+.calendarLink {
+  background-image: url("/images/browser-header.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: top;
+  border: 1px solid #e5e7eb;
+  min-height: 200px;
+  border-radius: 8px;
+  padding-top: 30px;
+}
+
+.calendarLinkStep1 {
+  background-image: url("/images/calendar-preview.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: top;
+}

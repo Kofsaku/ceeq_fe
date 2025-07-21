@@ -52,7 +52,14 @@ export function CreateCalendar() {
     <PageWrapper metadata={metadata} isActionBar>
       <div className="px-4 lg:px-8 mb-[60px]">
         <h1 className="text-[24px]">概要</h1>
-        <Form layout="vertical" className="mt-6" form={form}>
+        <Form
+          layout="vertical"
+          className="mt-6"
+          form={form}
+          initialValues={{
+            fields: [""],
+          }}
+        >
           <div className="bg-white mt-4 lg: mt-[35px] p-4 lg:p-[40px]">
             <CeeqTabs
               items={items}

@@ -147,12 +147,12 @@ function Overview() {
             パーソナライズ
           </div>
         </div>
-        <div className="w-full lg:w-1/2 relative flex justify-center items-center mt-4 lg:mt-0">
-          <img
-            src="/images/calendar-preview.png"
-            alt="meeting"
-            style={{ objectFit: "none" }}
-          />
+        <div
+          className={twMerge(
+            "w-full lg:w-1/2 relative flex justify-center items-center mt-4 lg:mt-0",
+            style.calendarLinkStep1
+          )}
+        >
           <PreviewComponent meetType={meetType} />
         </div>
       </div>
