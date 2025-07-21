@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 function ModalSelectMeet() {
-  const { isModalOpen, setIsModalOpen, setMeetType } = useCalendarStore();
+  const { isModalOpen, setIsModalOpen, setMeetType, setActiveKey } =
+    useCalendarStore();
   const router = useRouter();
   const handleOk = () => {
     setIsModalOpen(false);
@@ -36,6 +37,7 @@ function ModalSelectMeet() {
     setMeetType(id);
     router.push(`/calendar/create`);
     setIsModalOpen(false);
+    setActiveKey("1");
   };
 
   return (
