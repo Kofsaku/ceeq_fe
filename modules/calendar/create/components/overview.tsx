@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCalendarStore } from "@/store/use-calendar";
 import { useMemo } from "react";
 import { MeetType } from "@/store/use-calendar";
@@ -6,6 +6,7 @@ import { Form, Input, Select } from "antd";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import style from "./style.module.scss";
+import { useGetListHostUser } from "../../hooks/use-get-host-user";
 
 const PreviewComponent = ({ meetType }: { meetType: MeetType }) => {
   const iconMeet = useMemo(() => {
@@ -67,16 +68,27 @@ const PreviewComponent = ({ meetType }: { meetType: MeetType }) => {
 
 function Overview() {
   const { meetType } = useCalendarStore();
-
+  const [hostUsers, setHostUsers] = useState<any[]>([]);
   const titleType = useMemo(() => {
     if (meetType === MeetType.ONE_TO_ONE) {
       return "1対1";
     }
     return "グループ";
   }, [meetType]);
-  const onFinish = (values: any) => {
-    console.log("Received values of form:", values);
-  };
+  const { data: dataHostUser } = useGetListHostUser({});
+  useEffect(() => {
+    if (dataHostUser) {
+      const hostUsersFormat = [];
+      Object.entries(dataHostUser).forEach(([key, value]) => {
+        hostUsersFormat.push({
+          id: value,
+          label: key,
+          value: value,
+        });
+      });
+      setHostUsers(hostUsersFormat);
+    }
+  }, [dataHostUser]);
   const meetingOptions = useMemo(() => {
     return [
       {
@@ -91,7 +103,6 @@ function Overview() {
       },
     ];
   }, []);
-  const [form] = Form.useForm();
 
   return (
     <div>
@@ -111,7 +122,7 @@ function Overview() {
             label={<span className="text-xs">主催者名</span>}
             className="!mb-4"
           >
-            <Select options={[]} placeholder="主催者名" />
+            <Select options={hostUsers} placeholder="主催者名" />
           </Form.Item>
           <Form.Item
             name="event_title"

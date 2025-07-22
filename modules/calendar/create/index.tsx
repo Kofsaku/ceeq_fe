@@ -50,7 +50,7 @@ export function CreateCalendar() {
       },
       {
         key: "2",
-        label: "参加者",
+        label: "チームメンバー",
         children: <Members />,
       },
       {
