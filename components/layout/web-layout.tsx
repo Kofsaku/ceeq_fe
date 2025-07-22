@@ -16,51 +16,69 @@ import { InitUser } from "../init-user";
 
 const { Header, Content, Sider } = Layout;
 
-const menuItems: MenuProps["items"] = [
-  {
-    key: "1",
-    icon: <SvgIcon path="/admin/users.svg" className={styles.icon} />,
-    label: "顧客管理",
-    children: [{ key: "/sequence/list", label: "シーケンス" }],
-  },
-  {
-    key: "/sequence",
-    icon: <SvgIcon path="/account_tree.svg" className={styles.icon} />,
-    label: "シーケンス",
-  },
-  {
-    key: "3",
-    icon: <SvgIcon path="/admin/receipt_long.svg" className={styles.icon} />,
-    label: "請求管理",
-  },
-  {
-    key: "/chat",
-    icon: <SvgIcon path="/admin/chat.svg" className={styles.icon} />,
-    label: "コミュニケーション",
-  },
-  {
-    key: "/setting",
-    icon: <SvgIcon path="/admin/settings.svg" className={styles.icon} />,
-    label: "設定",
-    children: [
-      { key: "/", label: "アカウント" },
-      { key: "/", label: "レイアウト" },
-      { key: "/", label: "カスタムプロパティ" },
-      { key: "/", label: "契約" },
-      { key: "/", label: "データ連携" },
-      { key: "/setting", label: "グループアカウント連携" },
-      { key: "/", label: "権限" },
-    ],
-  },
-];
-
 const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const token = Cookies.get(ECookieKeys.TOKEN);
-
+  const menuItems: MenuProps["items"] = [
+    {
+      key: "1",
+      icon: <SvgIcon path="/admin/users.svg" className={styles.icon} />,
+      label: "顧客管理",
+      children: [{ key: "/sequence/list", label: "シーケンス" }],
+    },
+    {
+      key: "/sequence",
+      icon: <SvgIcon path="/account_tree.svg" className={styles.icon} />,
+      label: "シーケンス",
+    },
+    {
+      key: "/calendar",
+      icon: (
+        <SvgIcon path="/icons/calendar_month.svg" className={styles.icon} />
+      ),
+      label: "カレンダー",
+    },
+    {
+      key: "3",
+      icon: <SvgIcon path="/admin/receipt_long.svg" className={styles.icon} />,
+      label: "請求管理",
+    },
+    {
+      key: "/chat",
+      icon: <SvgIcon path="/admin/chat.svg" className={styles.icon} />,
+      label: "コミュニケーション",
+    },
+    {
+      key: "/setting",
+      icon: <SvgIcon path="/admin/settings.svg" className={styles.icon} />,
+      label: (
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/setting");
+            if (isMobile) {
+              setMobileDrawerOpen(false);
+            }
+          }}
+          className="cursor-pointer"
+        >
+          設定
+        </span>
+      ),
+      children: [
+        { key: "/setting/account", label: "アカウント" },
+        { key: "/setting/layout", label: "レイアウト" },
+        { key: "/setting/custom", label: "カスタムプロパティ" },
+        { key: "/setting/contract", label: "契約" },
+        { key: "/setting/data", label: "データ連携" },
+        { key: "/setting/group", label: "グループアカウント連携" },
+        { key: "/setting/permission", label: "権限" },
+      ],
+    },
+  ];
   // Check if device is mobile
   useEffect(() => {
     const checkIsMobile = () => {
@@ -73,11 +91,11 @@ const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     router.push("/auth/login");
-  //   }
-  // }, [token]);
+  useEffect(() => {
+    if (!token) {
+      router.push("/auth/login");
+    }
+  }, [token]);
 
   const signOut = () => {
     Cookies.remove(ECookieKeys.TOKEN);
@@ -209,7 +227,7 @@ const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
           </Drawer>
         )}
 
-        <Layout className={twMerge("px-8", isMobile && "!px-4")}>
+        <Layout>
           <Content
             className={twMerge("py-8 overflow-auto", isMobile && "!py-4")}
             style={{ minHeight: "calc(100vh - 64px)" }}

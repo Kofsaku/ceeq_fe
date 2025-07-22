@@ -124,3 +124,24 @@ export const insertChildrenBetween = (
     return node;
   });
 };
+
+export function generateMeetId(): string {
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  const getRandomLetter = () =>
+    letters[Math.floor(Math.random() * letters.length)];
+
+  const part1 = Array(3)
+    .fill(0)
+    .map(() => getRandomLetter())
+    .join("");
+  const part2 = Array(4)
+    .fill(0)
+    .map(() => getRandomLetter())
+    .join("");
+  const part3 = Array(3)
+    .fill(0)
+    .map(() => getRandomLetter())
+    .join("");
+
+  return `${part1}-${part2}-${part3}`;
+}

@@ -75,7 +75,6 @@ function CeeqStepSequence() {
   useEffect(() => {
     if (settingInput) {
       form.setFieldValue("sequence_name", settingInput.sequence_name);
-      console.log("🚀 ~ useEffect ~ settingInput:", settingInput);
     }
   }, [settingInput]);
 
