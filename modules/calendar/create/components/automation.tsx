@@ -7,19 +7,19 @@ import React from "react";
 const timeScheduleOptions = [
   {
     label: "分前",
-    value: "分前",
+    value: 0,
   },
   {
     label: "時間前",
-    value: "時間前",
+    value: 1,
   },
   {
     label: "日前",
-    value: "日前",
+    value: 2,
   },
   {
     label: "週前",
-    value: "週前",
+    value: 3,
   },
 ];
 
@@ -35,13 +35,13 @@ function Automation() {
           </div>
         </div>
         <div>
-          <Form.Item name="reminder" className="!mb-0">
+          <Form.Item name="enable_reminder" className="!mb-0">
             <CeeqSwitch />
           </Form.Item>
         </div>
       </div>
       <div className="w-full lg:w-1/2 mt-4">
-        <Form.List name="reminders">
+        <Form.List name="notifications">
           {(fields, { add, remove }) => {
             return (
               <div>
@@ -53,11 +53,17 @@ function Automation() {
                     key={field.key}
                     className="flex gap-2 mt-2 items-center w-full"
                   >
-                    <Form.Item name={"weekly"} className="!mb-0 w-1/3">
+                    <Form.Item
+                      name={[field.name, "reminder_value"]}
+                      className="!mb-0 w-1/3"
+                    >
                       <InputNumber className="!w-full" />
                     </Form.Item>
                     <div className="!flex !gap-x-1 !items-center w-1/2">
-                      <Form.Item name={"start"} className="!mb-0 w-full">
+                      <Form.Item
+                        name={[field.name, "reminder_unit"]}
+                        className="!mb-0 w-full"
+                      >
                         <Select
                           options={timeScheduleOptions}
                           placeholder="開始"
@@ -102,7 +108,7 @@ function Automation() {
         {collapsed && (
           <>
             <Form.Item
-              name="subject"
+              name="mail_template_subject"
               label={<span className="text-xs">件名</span>}
               className="!mb-4"
             >
@@ -112,7 +118,7 @@ function Automation() {
               パーソナライズ
             </div>
             <Form.Item
-              name="body"
+              name="mail_template_body"
               label={<span className="text-xs">本文</span>}
               className="!mb-4"
             >

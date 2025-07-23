@@ -9,6 +9,11 @@ import ActionBar from "./components/action-bar";
 import SettingSchedule from "./components/setting-schedule";
 import Automation from "./components/automation";
 import Members from "./components/members";
+import {
+  CreateCalendarInput,
+  useCreateCalendar,
+} from "../hooks/use-create-calendar";
+import { toast } from "react-toastify";
 
 const metadata: ISeoMetadata = {
   title: "概要",
@@ -21,7 +26,7 @@ const metadata: ISeoMetadata = {
   disableCrawling: false,
 };
 export function CreateCalendar() {
-  const { meetType, activeKey, setActiveKey } = useCalendarStore();
+  const { meetType, activeKey } = useCalendarStore();
   const items: TabsProps["items"] = useMemo(() => {
     if (meetType === MeetType.ONE_TO_ONE) {
       return [
@@ -67,10 +72,48 @@ export function CreateCalendar() {
   }, [meetType]);
   const [form] = Form.useForm();
 
+  const { mutate: onCreateCalendar } = useCreateCalendar(
+    (response) => {
+      if (response.status === 200) {
+        toast.success("スケジュール作成成功");
+      }
+    },
+    (error) => {
+      toast.error("スケジュール作成失敗");
+    }
+  );
+
   const handleSubmit = () => {
-    const keys = ["1", "2", "3"];
-    const nextKey = keys[(keys.indexOf(activeKey) + 1) % keys.length] || "1";
-    setActiveKey(nextKey);
+    const formValues = form.getFieldsValue();
+    const params: CreateCalendarInput = {
+      user_id: formValues.user_id,
+      title: formValues.title,
+      name: formValues.name,
+      slug: formValues.slug ?? null,
+      schedule_type: meetType,
+      meeting_type: formValues?.meeting_type,
+      email_template: formValues.email_template,
+      color: formValues.color ?? null,
+      settings: {
+        title_setting: formValues?.title_setting ?? "",
+        duration: formValues?.duration,
+        use_working_hours: formValues?.use_working_hours,
+        booking_window_type: formValues?.booking_window_type,
+        notice_time_value: formValues?.notice_time_value,
+        notice_time_type: formValues?.notice_time_type,
+        min_booking_schedule: formValues?.min_booking_schedule,
+        buffer_time: formValues?.buffer_time,
+        working_hours: formValues?.working_hours,
+      },
+      notifications: {
+        enable_email_check: formValues?.enable_email_check,
+        enable_reminder: formValues?.enable_reminder,
+        email_reminders: formValues?.email_reminders,
+        mail_template_subject: formValues?.mail_template_subject,
+        mail_template_body: formValues?.mail_template_body,
+      },
+    };
+    onCreateCalendar(params);
   };
 
   return (
@@ -82,8 +125,21 @@ export function CreateCalendar() {
           className="mt-6"
           form={form}
           initialValues={{
-            fields: [""],
-            reminders: [""],
+            working_hours: [
+              {
+                day_of_week: "",
+                start_time: "",
+                end_time: "",
+              },
+            ],
+            notifications: [
+              {
+                reminder_value: "",
+                reminder_unit: "",
+              },
+            ],
+            use_working_hours: false,
+            enable_reminder: false,
           }}
         >
           <div className="bg-white mt-4 lg: mt-[35px] p-4 lg:p-[40px]">

@@ -93,13 +93,13 @@ function Overview() {
     return [
       {
         id: 1,
-        label: " Google Meet",
-        value: "",
+        label: "Google Meet",
+        value: 1,
       },
       {
-        id: 2,
+        id: 0,
         label: "Zoom",
-        value: "",
+        value: 0,
       },
     ];
   }, []);
@@ -111,21 +111,21 @@ function Overview() {
       <div className="lg:flex lg:gap-x-2">
         <div className="w-full lg:w-1/2">
           <Form.Item
-            name="internal_name"
+            name="name"
             label={<span className="text-xs">内部名</span>}
             className="!mb-4"
           >
             <Input placeholder="内部名" />
           </Form.Item>
           <Form.Item
-            name="host_name"
+            name="user_id"
             label={<span className="text-xs">主催者名</span>}
             className="!mb-4"
           >
             <Select options={hostUsers} placeholder="主催者名" />
           </Form.Item>
           <Form.Item
-            name="event_title"
+            name="title"
             label={<span className="text-xs">イベントタイトル</span>}
             className="!mb-4"
           >
@@ -135,20 +135,20 @@ function Overview() {
             パーソナライズ
           </div>
           <Form.Item
-            name="place"
+            name="slug"
             label={<span className="text-xs">場所</span>}
             className="!mb-1"
           >
             <Input placeholder="場所" />
           </Form.Item>
-          <Form.Item name="host_name" className="!mb-4 w-full lg:w-1/2">
+          <Form.Item name="meeting_type" className="!mb-4 w-full lg:w-1/2">
             <Select
               options={meetingOptions}
               placeholder="ビデオ会議リンクを追加"
             />
           </Form.Item>
           <Form.Item
-            name="email"
+            name="email_template"
             label={<span className="text-xs">メール</span>}
             className="!mb-4"
           >
