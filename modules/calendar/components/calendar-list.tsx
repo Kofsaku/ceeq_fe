@@ -20,18 +20,47 @@ interface DataType {
   name: string;
   min_booking_schedule: number;
   user_id: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
 }
 
 const columns: TableColumnsType<DataType> = [
-  { title: "スケジュール名", dataIndex: "name" },
-  { title: "主催者", dataIndex: "user_id" },
+  {
+    title: "スケジュール名",
+    dataIndex: "name",
+    render: (value, record) => {
+      return (
+        <div className="flex justify-between">
+          <div>{value}</div>
+          <div className="flex gap-x-2">
+            <button className="border px-2 rounded-[4px]">編集</button>
+            <button className="border px-2 rounded-[4px]">
+              リンクをコピー
+            </button>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    title: "主催者",
+    dataIndex: "user_id",
+    render: (_, record) => record.user?.name || record?.user?.email,
+  },
   { title: "場所名", dataIndex: "address" },
   {
     title: "所要時間(分)",
     dataIndex: "min_booking_schedule",
-    render: (_, record) => record.settings.min_booking_schedule,
+    render: (_, record) => `${record.settings.min_booking_schedule}分`,
   },
-  { title: "ミーティング予約数", dataIndex: "address" },
+  {
+    title: "ミーティング予約数",
+    dataIndex: "address",
+    render: (_, record) => 5,
+  },
 ];
 
 function CalendarList() {

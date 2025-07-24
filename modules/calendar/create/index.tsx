@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { MeetType, useCalendarStore } from "@/store/use-calendar";
 import { Form, TabsProps } from "antd";
 import CeeqTabs from "@/components/tabs";
@@ -14,6 +14,7 @@ import {
   useCreateCalendar,
 } from "../hooks/use-create-calendar";
 import { toast } from "react-toastify";
+import { useGetEnumOptions } from "../hooks/use-get-enum-options";
 
 const metadata: ISeoMetadata = {
   title: "概要",
@@ -26,19 +27,28 @@ const metadata: ISeoMetadata = {
   disableCrawling: false,
 };
 export function CreateCalendar() {
-  const { meetType, activeKey } = useCalendarStore();
+  const { meetType, activeKey, setEnumOptions } = useCalendarStore();
+  const [form] = Form.useForm();
+  const { data: enumOptionsResponse } = useGetEnumOptions();
+
+  useEffect(() => {
+    if (enumOptionsResponse) {
+      setEnumOptions(enumOptionsResponse);
+    }
+  }, [enumOptionsResponse]);
+
   const items: TabsProps["items"] = useMemo(() => {
     if (meetType === MeetType.ONE_TO_ONE) {
       return [
         {
           key: "1",
           label: "概要",
-          children: <Overview />,
+          children: <Overview form={form} />,
         },
         {
           key: "2",
           label: "スケジュール設定",
-          children: <SettingSchedule />,
+          children: <SettingSchedule form={form} />,
         },
         {
           key: "3",
@@ -51,7 +61,7 @@ export function CreateCalendar() {
       {
         key: "1",
         label: "概要",
-        children: <Overview />,
+        children: <Overview form={form} />,
       },
       {
         key: "2",
@@ -61,7 +71,7 @@ export function CreateCalendar() {
       {
         key: "3",
         label: "スケジュール設定",
-        children: <SettingSchedule />,
+        children: <SettingSchedule form={form} />,
       },
       {
         key: "4",
@@ -70,7 +80,6 @@ export function CreateCalendar() {
       },
     ];
   }, [meetType]);
-  const [form] = Form.useForm();
 
   const { mutate: onCreateCalendar } = useCreateCalendar(
     (response) => {
