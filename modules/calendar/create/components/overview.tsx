@@ -2,13 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useCalendarStore } from "@/store/use-calendar";
 import { useMemo } from "react";
 import { MeetType } from "@/store/use-calendar";
-import { Form, Input, Select } from "antd";
+import { Form, FormInstance, Input, Select } from "antd";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import style from "./style.module.scss";
 import { useGetListHostUser } from "../../hooks/use-get-host-user";
 
-const PreviewComponent = ({ meetType }: { meetType: MeetType }) => {
+const PreviewComponent = ({
+  meetType,
+  address,
+  mailTemplate,
+  userName,
+}: {
+  meetType: MeetType;
+  address: string;
+  mailTemplate: string;
+  userName: string;
+}) => {
   const iconMeet = useMemo(() => {
     if (meetType === MeetType.ONE_TO_ONE) {
       return "/icons/icon1vs1.svg";
@@ -40,7 +50,9 @@ const PreviewComponent = ({ meetType }: { meetType: MeetType }) => {
           <Image src={iconMeet} alt={iconMeet} width={23} height={23} />
           <div className="flex flex-col">
             <span className="text-gray-800 text-sm font-medium">名前</span>
-            <span className="text-gray-500 text-xs">主催者</span>
+            <span className="text-gray-500 text-xs truncate max-w-[110px]">
+              {userName}
+            </span>
           </div>
         </div>
       </div>
@@ -53,21 +65,25 @@ const PreviewComponent = ({ meetType }: { meetType: MeetType }) => {
           width={16}
           height={20}
         />
-        <span className="text-gray-800 text-sm">ビデオ会議リンク</span>
+        <div className="text-gray-800 text-sm truncate max-w-[150px]">
+          {address}
+        </div>
       </div>
 
       {/* Email Content Row */}
       <div className="flex items-center gap-3">
         <Image src="/icons/dehaze.svg" alt="dehaze" width={18} height={20} />
-        <span className="text-gray-800 text-sm">メール内容を記載</span>
+        <div className="text-gray-800 text-sm truncate max-w-[150px]">
+          {mailTemplate}
+        </div>
       </div>
       <span className={style.arrow}></span>
     </div>
   );
 };
 
-function Overview() {
-  const { meetType } = useCalendarStore();
+function Overview({ form }: { form: FormInstance }) {
+  const { meetType, enumOptions } = useCalendarStore();
   const [hostUsers, setHostUsers] = useState<any[]>([]);
   const titleType = useMemo(() => {
     if (meetType === MeetType.ONE_TO_ONE) {
@@ -76,6 +92,7 @@ function Overview() {
     return "グループ";
   }, [meetType]);
   const { data: dataHostUser } = useGetListHostUser({});
+
   useEffect(() => {
     if (dataHostUser) {
       const hostUsersFormat = [];
@@ -89,20 +106,15 @@ function Overview() {
       setHostUsers(hostUsersFormat);
     }
   }, [dataHostUser]);
-  const meetingOptions = useMemo(() => {
-    return [
-      {
-        id: 1,
-        label: " Google Meet",
-        value: "",
-      },
-      {
-        id: 2,
-        label: "Zoom",
-        value: "",
-      },
-    ];
-  }, []);
+
+  const watchAddress = Form.useWatch("address", form);
+  const mailTemplate = Form.useWatch("email_template", form);
+  const userId = Form.useWatch("user_id", form);
+
+  const userName = useMemo(() => {
+    const user = hostUsers.find((item) => item.value === userId);
+    return user?.label;
+  }, [hostUsers, userId]);
 
   return (
     <div>
@@ -111,21 +123,21 @@ function Overview() {
       <div className="lg:flex lg:gap-x-2">
         <div className="w-full lg:w-1/2">
           <Form.Item
-            name="internal_name"
+            name="name"
             label={<span className="text-xs">内部名</span>}
             className="!mb-4"
           >
             <Input placeholder="内部名" />
           </Form.Item>
           <Form.Item
-            name="host_name"
+            name="user_id"
             label={<span className="text-xs">主催者名</span>}
             className="!mb-4"
           >
             <Select options={hostUsers} placeholder="主催者名" />
           </Form.Item>
           <Form.Item
-            name="event_title"
+            name="title"
             label={<span className="text-xs">イベントタイトル</span>}
             className="!mb-4"
           >
@@ -135,20 +147,20 @@ function Overview() {
             パーソナライズ
           </div>
           <Form.Item
-            name="place"
+            name="address"
             label={<span className="text-xs">場所</span>}
             className="!mb-1"
           >
             <Input placeholder="場所" />
           </Form.Item>
-          <Form.Item name="host_name" className="!mb-4 w-full lg:w-1/2">
+          <Form.Item name="meeting_type" className="!mb-4 w-full lg:w-1/2">
             <Select
-              options={meetingOptions}
+              options={enumOptions?.meeting_types}
               placeholder="ビデオ会議リンクを追加"
             />
           </Form.Item>
           <Form.Item
-            name="email"
+            name="email_template"
             label={<span className="text-xs">メール</span>}
             className="!mb-4"
           >
@@ -164,7 +176,12 @@ function Overview() {
             style.calendarLinkStep1
           )}
         >
-          <PreviewComponent meetType={meetType} />
+          <PreviewComponent
+            meetType={meetType}
+            address={watchAddress}
+            mailTemplate={mailTemplate}
+            userName={userName}
+          />
         </div>
       </div>
     </div>

@@ -1,12 +1,17 @@
-import React, { useMemo } from "react";
+import { useCalendarStore } from "@/store/use-calendar";
 import { Modal } from "antd";
-import { MeetType, useCalendarStore } from "@/store/use-calendar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 function ModalSelectMeet() {
-  const { isModalOpen, setIsModalOpen, setMeetType, setActiveKey } =
-    useCalendarStore();
+  const {
+    isModalOpen,
+    setIsModalOpen,
+    setMeetType,
+    setActiveKey,
+    enumOptions,
+  } = useCalendarStore();
   const router = useRouter();
   const handleOk = () => {
     setIsModalOpen(false);
@@ -19,21 +24,21 @@ function ModalSelectMeet() {
   const meetOptions = useMemo(() => {
     return [
       {
-        id: MeetType.ONE_TO_ONE,
-        label: "1対1",
+        id: enumOptions?.schedule_types[0].value,
+        label: enumOptions?.schedule_types[0].label,
         icon: "/icons/icon1vs1.svg",
         description: `チームの代表者1人との/nミーティングをスケジュールにできます。`,
       },
       {
-        id: MeetType.GROUP,
-        label: "グループ",
+        id: enumOptions?.schedule_types[1].value,
+        label: enumOptions?.schedule_types[1].label,
         icon: "/icons/icon_group.svg",
         description: `チームの複数のメンバー/nとのミーティングをスケジュールできます。`,
       },
     ];
   }, []);
 
-  const handleSelectMeet = (id: MeetType) => {
+  const handleSelectMeet = (id: number) => {
     setMeetType(id);
     router.push(`/calendar/create`);
     setIsModalOpen(false);
@@ -57,7 +62,7 @@ function ModalSelectMeet() {
           <div
             key={option.label}
             className="flex flex-col items-center gap-y-5 text-center border border-gray-100 p-4 cursor-pointer"
-            onClick={() => handleSelectMeet(option.id)}
+            onClick={() => handleSelectMeet(+option.id)}
           >
             <Image
               src={option.icon}

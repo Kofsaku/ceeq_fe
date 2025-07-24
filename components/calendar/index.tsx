@@ -14,9 +14,11 @@ import styles from "./style.module.scss";
 const CeeqCalendar = ({
   className,
   onChange,
+  disabledDate,
 }: {
   className?: string;
   onChange?: (value: Dayjs) => void;
+  disabledDate?: (current: Dayjs) => boolean;
 }) => {
   const headerRender = ({ value, onChange }) => {
     const handlePrevious = () => {
@@ -60,6 +62,7 @@ const CeeqCalendar = ({
           className={styles.calendar}
           headerRender={headerRender}
           onChange={onChange}
+          disabledDate={disabledDate}
         />
       </ConfigProvider>
     </div>
