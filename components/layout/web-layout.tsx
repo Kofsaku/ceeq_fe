@@ -52,28 +52,15 @@ const WebLayout: React.FC = ({ children }: { children: React.ReactNode }) => {
       label: "コミュニケーション",
     },
     {
-      key: "/setting",
+      key: "/",
       icon: <SvgIcon path="/admin/settings.svg" className={styles.icon} />,
-      label: (
-        <span
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/setting");
-            if (isMobile) {
-              setMobileDrawerOpen(false);
-            }
-          }}
-          className="cursor-pointer"
-        >
-          設定
-        </span>
-      ),
+      label: "設定",
       children: [
-        { key: "/setting/account", label: "アカウント" },
+        { key: "/setting/accounts", label: "アカウント" },
         { key: "/setting/layout", label: "レイアウト" },
         { key: "/setting/custom", label: "カスタムプロパティ" },
         { key: "/setting/contract", label: "契約" },
-        { key: "/setting/data", label: "データ連携" },
+        { key: "/setting", label: "データ連携" },
         { key: "/setting/group", label: "グループアカウント連携" },
         { key: "/setting/permission", label: "権限" },
       ],
