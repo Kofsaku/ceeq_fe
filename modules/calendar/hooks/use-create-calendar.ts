@@ -41,6 +41,10 @@ export interface CreateCalendarInput {
   schedule_type: MeetType; // 0: 1vs1, 1: group
   meeting_type: number; // 0: zoom, 1: google_met
   email_template: string;
+  group_members?: {
+    user_id: number;
+    role: number;
+  }[];
   settings: ISettings;
   notifications: INotifications;
 }

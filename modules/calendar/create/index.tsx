@@ -32,7 +32,14 @@ const metadata: ISeoMetadata = {
   disableCrawling: false,
 };
 export function CreateCalendar() {
-  const { meetType, activeKey, setEnumOptions } = useCalendarStore();
+  const {
+    meetType,
+    activeKey,
+    setEnumOptions,
+    setMeetType,
+    groupMembers,
+    setGroupMembers,
+  } = useCalendarStore();
   const [form] = Form.useForm();
   const { data: enumOptionsResponse } = useGetEnumOptions();
 
@@ -71,7 +78,7 @@ export function CreateCalendar() {
       {
         key: "2",
         label: "チームメンバー",
-        children: <Members />,
+        children: <Members form={form} />,
       },
       {
         key: "3",
@@ -128,6 +135,15 @@ export function CreateCalendar() {
         notifications,
         slug,
       });
+      setGroupMembers(
+        dataDetail?.group_members.map((item) => ({
+          id: item.user_id,
+          value: item.user_id,
+          role_id: item.role,
+          label: item.user.name || item.user.email,
+        }))
+      );
+      setMeetType(dataDetail?.schedule_type);
     }
   }, [dataDetail]);
 
@@ -161,6 +177,12 @@ export function CreateCalendar() {
         mail_template_body: formValues?.mail_template_body,
       },
     };
+    if (meetType === MeetType.GROUP) {
+      params.group_members = groupMembers.map((item) => ({
+        user_id: item.id,
+        role: item.role_id,
+      }));
+    }
     if (id) {
       onUpdateCalendar({ id: +id, ...params });
     } else {

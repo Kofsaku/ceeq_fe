@@ -22,6 +22,16 @@ export interface IResponse {
   meeting_url: number;
   color: string;
   status: number;
+  group_members?: {
+    id: number;
+    user_id: number;
+    role: number;
+    user: {
+      id: number;
+      name: string;
+      email: string;
+    };
+  }[];
   settings: {
     id: number;
     title_setting: string;
