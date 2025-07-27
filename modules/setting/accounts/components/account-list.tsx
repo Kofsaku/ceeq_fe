@@ -1,7 +1,6 @@
 import {
   DeleteOutlined,
   SearchOutlined,
-  CopyOutlined,
   EditOutlined,
 } from "@ant-design/icons";
 import { Input, Pagination, Select } from "antd";
@@ -10,8 +9,6 @@ import CeeqButton from "@/components/button";
 import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { useGetListAccounts } from "../hooks/use-get-list-accounts";
-// import { useGetListCalendar } from "../hooks/use-get-list-calendar";
-// import { useGetListHostUser } from "../hooks/use-get-host-user";
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>["rowSelection"];
@@ -27,6 +24,11 @@ interface DataType {
     name: string;
     email: string;
   };
+  role: {
+    id: number;
+    name: string;
+    display_name: string;
+  };
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -38,7 +40,11 @@ const columns: TableColumnsType<DataType> = [
     title: "メールアドレス",
     dataIndex: "email",
   },
-  { title: "権限", dataIndex: "role_id" },
+  {
+    title: "権限",
+    dataIndex: "role_id",
+    render: (text, record) => record.role?.display_name,
+  },
 ];
 
 function AccountList() {
@@ -51,23 +57,6 @@ function AccountList() {
     search: "",
     sort_role_id: "asc",
   });
-  const [hostUsers, setHostUsers] = useState<any[]>([]);
-
-  // const { data: dataHostUser } = useGetListHostUser({});
-  // useEffect(() => {
-  //   if (dataHostUser) {
-  //     const hostUsersFormat = [];
-  //     Object.entries(dataHostUser).forEach(([key, value]) => {
-  //       hostUsersFormat.push({
-  //         id: value,
-  //         label: key,
-  //         value: value,
-  //       });
-  //     });
-  //     setHostUsers(hostUsersFormat);
-  //   }
-  // }, [dataHostUser]);
-
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
