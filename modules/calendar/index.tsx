@@ -7,6 +7,7 @@ import CalendarList from "./components/calendar-list";
 import { useCalendarStore } from "@/store/use-calendar";
 import ModalSelectMeet from "./components/modal-select-meet";
 import ModalClone from "./components/modal-clone";
+import ModalAddMember from "./components/modal-add-member";
 
 export function CalendarPage() {
   const metadata: ISeoMetadata = {

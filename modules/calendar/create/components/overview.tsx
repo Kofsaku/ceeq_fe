@@ -83,8 +83,7 @@ const PreviewComponent = ({
 };
 
 function Overview({ form }: { form: FormInstance }) {
-  const { meetType, enumOptions } = useCalendarStore();
-  const [hostUsers, setHostUsers] = useState<any[]>([]);
+  const { meetType, enumOptions, setAccounts, accounts } = useCalendarStore();
   const [accountParams, setAccountParams] = useState({
     sort_role_id: "asc",
     search: "",
@@ -107,8 +106,9 @@ function Overview({ form }: { form: FormInstance }) {
         id: account.id,
         label: account.full_name || account.email, // Hoặc account.title tùy theo field nào hiển thị tên
         value: account.id,
+        role_id: account?.role?.id,
       }));
-      setHostUsers(hostUsersFormat);
+      setAccounts(hostUsersFormat);
     }
   }, [dataAccounts]);
 
@@ -117,9 +117,9 @@ function Overview({ form }: { form: FormInstance }) {
   const userId = Form.useWatch("user_id", form);
 
   const userName = useMemo(() => {
-    const user = hostUsers.find((item) => item.value === userId);
+    const user = accounts.find((item) => item.value === userId);
     return user?.label;
-  }, [hostUsers, userId]);
+  }, [accounts, userId]);
 
   const handleSearchAccounts = (searchValue: string) => {
     setAccountParams((prev) => ({
@@ -146,9 +146,10 @@ function Overview({ form }: { form: FormInstance }) {
             name="user_id"
             label={<span className="text-xs">主催者名</span>}
             className="!mb-4"
+            rules={[{ required: true, message: "主催者名を入力してください" }]}
           >
             <Select
-              options={hostUsers}
+              options={accounts}
               placeholder="主催者名"
               loading={isLoadingAccounts}
               showSearch

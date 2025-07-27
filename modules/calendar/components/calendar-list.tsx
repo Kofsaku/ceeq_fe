@@ -165,7 +165,7 @@ function CalendarList() {
 
   const { confirm, contextHolder } = useAlertModal(
     "",
-    "ステップの作成を完了しますか？",
+    "本当に削除しますか？",
     () => {
       onDeleteCalendar(Number(selectedRowKeys?.[0]));
     },
