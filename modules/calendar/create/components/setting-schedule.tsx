@@ -15,23 +15,14 @@ import { useMemo, useState } from "react";
 import CeeqCalendar from "@/components/calendar";
 import { useCalendarStore } from "@/store/use-calendar";
 
-const meetingId = generateMeetId();
-
 function SettingSchedule({ form }: { form: FormInstance }) {
   const { enumOptions } = useCalendarStore();
   const [date, setDate] = useState<Dayjs | null>(null);
   const onPanelChange = (value: Dayjs) => {
-    console.log("🚀 ~ onPanelChange ~ value:", value.day());
     setDate(value);
   };
   const watchWorkingHours = Form.useWatch("working_hours", form);
-  console.log("🚀 ~ SettingSchedule ~ watchWorkingHours:", watchWorkingHours);
-
-  const extractDaysOfWeek = useMemo(() => {
-    return watchWorkingHours?.map((item) => item?.day_of_week);
-  }, [watchWorkingHours]);
-  console.log("🚀 ~ SettingSchedule ~ extractDaysOfWeek:", extractDaysOfWeek);
-
+  const watchSlug = Form.useWatch("slug", form);
   const watchTimesMeeting = Form.useWatch("duration", form);
 
   const timeMeeting = useMemo(() => {
@@ -43,11 +34,20 @@ function SettingSchedule({ form }: { form: FormInstance }) {
     return data && data.every((item) => item?.day_of_week);
   };
 
+  const meetingUrl = useMemo(() => {
+    return `${CALLBACK_URL}/calendar/`;
+  }, []);
+
   return (
     <div className="lg:flex gap-x-2">
       <div className="w-full lg:w-1/2">
         <div>スケジュール設定ページのリンク</div>
-        <div>{`${CALLBACK_URL}/calendar/${meetingId}`}</div>
+        <div className="flex items-center">
+          <span>{meetingUrl}</span>
+          <Form.Item name="slug" className="!mb-1" rules={[{ required: true }]}>
+            <Input placeholder="12345678" />
+          </Form.Item>
+        </div>
         <div className="text-gray-900 font-bold my-4">スケジュール</div>
         <Form.Item
           name="title_setting"
@@ -183,7 +183,7 @@ function SettingSchedule({ form }: { form: FormInstance }) {
       <div className="w-full lg:w-1/2 px-2 lg:px-14 pt-3 lg:pt-8">
         <div className={styles.calendarLink}>
           <div className="mx-4">
-            <Input value={`${CALLBACK_URL}/calendar/${meetingId}`} disabled />
+            <Input value={`${CALLBACK_URL}/calendar/${watchSlug}`} disabled />
           </div>
           <div className="my-4">
             <h2 className="text-center font-bold bg-[#f2f2f2] mx-4 pt-2">

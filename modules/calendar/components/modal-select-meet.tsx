@@ -24,19 +24,19 @@ function ModalSelectMeet() {
   const meetOptions = useMemo(() => {
     return [
       {
-        id: enumOptions?.schedule_types[0].value,
-        label: enumOptions?.schedule_types[0].label,
+        id: enumOptions?.schedule_types?.[0]?.value,
+        label: enumOptions?.schedule_types?.[0].label,
         icon: "/icons/icon1vs1.svg",
         description: `チームの代表者1人との/nミーティングをスケジュールにできます。`,
       },
       {
-        id: enumOptions?.schedule_types[1].value,
-        label: enumOptions?.schedule_types[1].label,
+        id: enumOptions?.schedule_types?.[1]?.value,
+        label: enumOptions?.schedule_types?.[1]?.label,
         icon: "/icons/icon_group.svg",
         description: `チームの複数のメンバー/nとのミーティングをスケジュールできます。`,
       },
     ];
-  }, []);
+  }, [enumOptions]);
 
   const handleSelectMeet = (id: number) => {
     setMeetType(id);

@@ -32,12 +32,12 @@ export interface INotifications {
   mail_template_body: string;
 }
 
-export interface CreateCalendarInput {
+export interface UpdateCalendarInput {
+  id: number;
   name: string;
   user_id: number;
   title: string;
   slug: string;
-  address: string;
   schedule_type: MeetType; // 0: 1vs1, 1: group
   meeting_type: number; // 0: zoom, 1: google_met
   email_template: string;
@@ -45,17 +45,18 @@ export interface CreateCalendarInput {
   notifications: INotifications;
 }
 
-export const useCreateCalendar = (
+export const useUpdateCalendar = (
   onSuccess: (data: any) => void,
   onError: (error: any) => void
 ) => {
-  const { post } = useHttpClient(API_SERVICES_NAME.PUBLIC);
+  const { put } = useHttpClient(API_SERVICES_NAME.PUBLIC);
 
   return useMutation({
-    mutationFn: (input: CreateCalendarInput) => {
-      return post("/schedules", { body: input });
+    mutationFn: (input: UpdateCalendarInput) => {
+      const { id, ...rest } = input;
+      return put(`/schedules/${id}/edit`, { body: rest });
     },
-    onSuccess: (data: any) => onSuccess(data?.data),
+    onSuccess: (data: any) => onSuccess(data),
     onError: (error: any) => onError(error),
   });
 };
