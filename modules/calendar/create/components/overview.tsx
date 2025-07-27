@@ -6,7 +6,7 @@ import { Form, FormInstance, Input, Select } from "antd";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import style from "./style.module.scss";
-import { useGetListHostUser } from "../../hooks/use-get-host-user";
+import { useGetListAccounts } from "@/modules/setting/accounts/hooks/use-get-list-accounts";
 
 const PreviewComponent = ({
   meetType,
@@ -85,27 +85,32 @@ const PreviewComponent = ({
 function Overview({ form }: { form: FormInstance }) {
   const { meetType, enumOptions } = useCalendarStore();
   const [hostUsers, setHostUsers] = useState<any[]>([]);
+  const [accountParams, setAccountParams] = useState({
+    sort_role_id: "asc",
+    search: "",
+    limit: 20,
+    page: 1,
+  });
+
   const titleType = useMemo(() => {
     if (meetType === MeetType.ONE_TO_ONE) {
       return "1対1";
     }
     return "グループ";
   }, [meetType]);
-  const { data: dataHostUser } = useGetListHostUser({});
+  const { data: dataAccounts, isLoading: isLoadingAccounts } =
+    useGetListAccounts(accountParams);
 
   useEffect(() => {
-    if (dataHostUser) {
-      const hostUsersFormat = [];
-      Object.entries(dataHostUser).forEach(([key, value]) => {
-        hostUsersFormat.push({
-          id: value,
-          label: key,
-          value: value,
-        });
-      });
+    if (dataAccounts?.data) {
+      const hostUsersFormat = dataAccounts.data.map((account: any) => ({
+        id: account.id,
+        label: account.full_name || account.email, // Hoặc account.title tùy theo field nào hiển thị tên
+        value: account.id,
+      }));
       setHostUsers(hostUsersFormat);
     }
-  }, [dataHostUser]);
+  }, [dataAccounts]);
 
   const watchAddress = Form.useWatch("address", form);
   const mailTemplate = Form.useWatch("email_template", form);
@@ -115,6 +120,14 @@ function Overview({ form }: { form: FormInstance }) {
     const user = hostUsers.find((item) => item.value === userId);
     return user?.label;
   }, [hostUsers, userId]);
+
+  const handleSearchAccounts = (searchValue: string) => {
+    setAccountParams((prev) => ({
+      ...prev,
+      search: searchValue,
+      page: 1, // Reset về page 1 khi search
+    }));
+  };
 
   return (
     <div>
@@ -134,7 +147,17 @@ function Overview({ form }: { form: FormInstance }) {
             label={<span className="text-xs">主催者名</span>}
             className="!mb-4"
           >
-            <Select options={hostUsers} placeholder="主催者名" />
+            <Select
+              options={hostUsers}
+              placeholder="主催者名"
+              loading={isLoadingAccounts}
+              showSearch
+              filterOption={false}
+              onSearch={handleSearchAccounts}
+              notFoundContent={
+                isLoadingAccounts ? "読み込み中..." : "データが見つかりません"
+              }
+            />
           </Form.Item>
           <Form.Item
             name="title"

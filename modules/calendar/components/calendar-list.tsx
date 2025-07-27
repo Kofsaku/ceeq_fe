@@ -13,6 +13,10 @@ import { useGetListHostUser } from "../hooks/use-get-host-user";
 import { useRouter } from "next/navigation";
 import { useCalendarStore } from "@/store/use-calendar";
 import { useCopyToClipboard } from "@/hooks/use-copy-text";
+import useAlertModal from "@/hooks/use-alert-modal";
+import { useDeleteCalendar } from "../hooks/use-delete-calendar";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>["rowSelection"];
@@ -33,8 +37,12 @@ interface DataType {
 }
 
 function CalendarList() {
-  const { setActiveKey } = useCalendarStore();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const {
+    setActiveKey,
+    setIsModalOpenClone,
+    selectedRowKeys,
+    setSelectedRowKeys,
+  } = useCalendarStore();
   const [dataCalendar, setDataCalendar] = useState<any>([]);
   const { copyToClipboard } = useCopyToClipboard();
   const [total, setTotal] = useState(0);
@@ -50,6 +58,8 @@ function CalendarList() {
     setActiveKey("1");
     router.push(`/calendar/create?id=${id}`);
   };
+  const queryClient = useQueryClient();
+
   const columns: TableColumnsType<DataType> = [
     {
       title: "スケジュール名",
@@ -135,6 +145,35 @@ function CalendarList() {
     });
   };
 
+  const handleClone = () => {
+    setIsModalOpenClone(true);
+  };
+
+  const { mutate: onDeleteCalendar } = useDeleteCalendar(
+    (res) => {
+      if (res) {
+        toast.success("スケジュール削除成功");
+        queryClient.invalidateQueries({
+          queryKey: ["calendar-list"],
+        });
+      }
+    },
+    (error) => {
+      toast.error("スケジュール削除失敗");
+    }
+  );
+
+  const { confirm, contextHolder } = useAlertModal(
+    "",
+    "ステップの作成を完了しますか？",
+    () => {
+      onDeleteCalendar(Number(selectedRowKeys?.[0]));
+    },
+    () => {},
+    "完了",
+    "キャンセル"
+  );
+
   return (
     <div>
       <div className="bg-[#F2F2F2] p-2 lg:px-[40px] lg:py-2 lg:flex justify-between gap-x-[14px]">
@@ -159,11 +198,21 @@ function CalendarList() {
             title="複製"
             className="!bg-transparent !text-[#1A1A1A] !border-none !px-1"
             icon={<CopyOutlined />}
+            onClick={handleClone}
+            disabled={
+              selectedRowKeys.length === 0 || selectedRowKeys.length > 1
+            }
           />
           <CeeqButton
             title="削除"
             className="!bg-transparent !text-[#1A1A1A] !border-none !px-1"
             icon={<DeleteOutlined />}
+            disabled={
+              selectedRowKeys.length === 0 || selectedRowKeys.length > 1
+            }
+            onClick={() => {
+              confirm();
+            }}
           />
         </div>
       </div>
@@ -186,6 +235,7 @@ function CalendarList() {
           />
         </div>
       </div>
+      {contextHolder}
     </div>
   );
 }

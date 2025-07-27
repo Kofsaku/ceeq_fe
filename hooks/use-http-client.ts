@@ -99,8 +99,8 @@ const useHttpClient = (service?: API_SERVICES_NAME) => {
       body: options?.isFormData
         ? (body as FormData)
         : body
-        ? JSON.stringify(body)
-        : undefined,
+          ? JSON.stringify(body)
+          : undefined,
     });
 
     const { status, statusText } = response;
@@ -192,6 +192,14 @@ const useHttpClient = (service?: API_SERVICES_NAME) => {
         isFormData?: boolean;
       }
     ) => request<T>(input, { ...options, method: HTTP_METHODS.PUT }),
+    delete: async <T>(
+      input: string,
+      options?: {
+        params?: Record<string, any>;
+        body?: Record<string, any>;
+        headers?: Record<string, string>;
+      }
+    ) => request<T>(input, { ...options, method: HTTP_METHODS.DELETE }),
     requestGetFile,
   };
 };

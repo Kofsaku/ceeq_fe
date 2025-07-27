@@ -6,6 +6,7 @@ import CeeqButton from "@/components/button";
 import CalendarList from "./components/calendar-list";
 import { useCalendarStore } from "@/store/use-calendar";
 import ModalSelectMeet from "./components/modal-select-meet";
+import ModalClone from "./components/modal-clone";
 
 export function CalendarPage() {
   const metadata: ISeoMetadata = {
@@ -38,6 +39,7 @@ export function CalendarPage() {
           <CalendarList />
         </div>
         <ModalSelectMeet />
+        <ModalClone />
       </div>
     </PageWrapper>
   );

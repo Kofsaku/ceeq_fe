@@ -16,6 +16,10 @@ export interface ICalendarStore {
   setActiveKey: (value: string) => void;
   enumOptions: EnumOptionsKey;
   setEnumOptions: (value: EnumOptionsKey) => void;
+  isModalOpenClone: boolean;
+  setIsModalOpenClone: (value: boolean) => void;
+  selectedRowKeys: React.Key[];
+  setSelectedRowKeys: (value: React.Key[]) => void;
 }
 
 export const useCalendarStore = create<ICalendarStore>()(
@@ -29,6 +33,11 @@ export const useCalendarStore = create<ICalendarStore>()(
       setActiveKey: (value: string) => set({ activeKey: value }),
       enumOptions: {} as EnumOptionsKey,
       setEnumOptions: (value: EnumOptionsKey) => set({ enumOptions: value }),
+      isModalOpenClone: false,
+      setIsModalOpenClone: (value: boolean) => set({ isModalOpenClone: value }),
+      selectedRowKeys: [],
+      setSelectedRowKeys: (value: React.Key[]) =>
+        set({ selectedRowKeys: value }),
     }),
     {
       name: "calendar-storage",
