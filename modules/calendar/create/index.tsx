@@ -15,6 +15,11 @@ import {
 } from "../hooks/use-create-calendar";
 import { toast } from "react-toastify";
 import { useGetEnumOptions } from "../hooks/use-get-enum-options";
+import { useSearchParams } from "next/navigation";
+import { useGetDetailCalendar } from "../hooks/use-get-detail";
+import { useUpdateCalendar } from "../hooks/use-update-calendar";
+import router from "next/router";
+import { CALLBACK_URL } from "@/const/env.const";
 
 const metadata: ISeoMetadata = {
   title: "概要",
@@ -83,8 +88,9 @@ export function CreateCalendar() {
 
   const { mutate: onCreateCalendar } = useCreateCalendar(
     (response) => {
-      if (response.status === 200) {
+      if (response) {
         toast.success("スケジュール作成成功");
+        router.push(`/calendar`);
       }
     },
     (error) => {
@@ -92,17 +98,50 @@ export function CreateCalendar() {
     }
   );
 
+  const { mutate: onUpdateCalendar } = useUpdateCalendar(
+    (response) => {
+      if (response.status === 200) {
+        toast.success("スケジュール作成成功");
+        router.push(`/calendar`);
+      }
+    },
+    (error) => {
+      toast.error("スケジュール作成失敗");
+    }
+  );
+
+  const searchParams = useSearchParams();
+
+  const id = searchParams.get("id");
+
+  const { data: dataDetail } = useGetDetailCalendar(Number(id));
+  useEffect(() => {
+    if (dataDetail) {
+      const { ...restSetting } = dataDetail?.settings;
+      const { ...restNotification } = dataDetail?.notifications;
+      const slug = dataDetail?.slug?.split("/")?.pop();
+      const notifications = restNotification?.email_reminders;
+      form.setFieldsValue({
+        ...dataDetail,
+        ...restSetting,
+        ...restNotification,
+        notifications,
+        slug,
+      });
+    }
+  }, [dataDetail]);
+
   const handleSubmit = () => {
     const formValues = form.getFieldsValue();
     const params: CreateCalendarInput = {
       user_id: formValues.user_id,
       title: formValues.title,
       name: formValues.name,
-      slug: formValues.slug ?? null,
+      address: formValues.address,
+      slug: `${CALLBACK_URL}/calendar/${formValues.slug}`,
       schedule_type: meetType,
       meeting_type: formValues?.meeting_type,
       email_template: formValues.email_template,
-      color: formValues.color ?? null,
       settings: {
         title_setting: formValues?.title_setting ?? "",
         duration: formValues?.duration,
@@ -117,12 +156,16 @@ export function CreateCalendar() {
       notifications: {
         enable_email_check: formValues?.enable_email_check,
         enable_reminder: formValues?.enable_reminder,
-        email_reminders: formValues?.email_reminders,
+        email_reminders: formValues?.notifications,
         mail_template_subject: formValues?.mail_template_subject,
         mail_template_body: formValues?.mail_template_body,
       },
     };
-    onCreateCalendar(params);
+    if (id) {
+      onUpdateCalendar({ id: +id, ...params });
+    } else {
+      onCreateCalendar(params);
+    }
   };
 
   return (
@@ -160,7 +203,12 @@ export function CreateCalendar() {
           </div>
         </Form>
       </div>
-      <ActionBar onSubmit={handleSubmit} onCancel={() => {}} />
+      <ActionBar
+        onSubmit={handleSubmit}
+        onCancel={() => {
+          router.push("/calendar");
+        }}
+      />
     </PageWrapper>
   );
 }

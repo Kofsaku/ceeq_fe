@@ -10,11 +10,15 @@ import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { useGetListCalendar } from "../hooks/use-get-list-calendar";
 import { useGetListHostUser } from "../hooks/use-get-host-user";
+import { useRouter } from "next/navigation";
+import { useCalendarStore } from "@/store/use-calendar";
+import { useCopyToClipboard } from "@/hooks/use-copy-text";
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>["rowSelection"];
 
 interface DataType {
+  id: number;
   settings: any;
   key: React.Key;
   name: string;
@@ -25,47 +29,14 @@ interface DataType {
     name: string;
     email: string;
   };
+  slug: string;
 }
 
-const columns: TableColumnsType<DataType> = [
-  {
-    title: "スケジュール名",
-    dataIndex: "name",
-    render: (value, record) => {
-      return (
-        <div className="flex justify-between">
-          <div>{value}</div>
-          <div className="flex gap-x-2">
-            <button className="border px-2 rounded-[4px]">編集</button>
-            <button className="border px-2 rounded-[4px]">
-              リンクをコピー
-            </button>
-          </div>
-        </div>
-      );
-    },
-  },
-  {
-    title: "主催者",
-    dataIndex: "user_id",
-    render: (_, record) => record.user?.name || record?.user?.email,
-  },
-  { title: "場所名", dataIndex: "address" },
-  {
-    title: "所要時間(分)",
-    dataIndex: "min_booking_schedule",
-    render: (_, record) => `${record.settings.min_booking_schedule}分`,
-  },
-  {
-    title: "ミーティング予約数",
-    dataIndex: "address",
-    render: (_, record) => 5,
-  },
-];
-
 function CalendarList() {
+  const { setActiveKey } = useCalendarStore();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [dataCalendar, setDataCalendar] = useState<any>([]);
+  const { copyToClipboard } = useCopyToClipboard();
   const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState({
     page: 1,
@@ -74,7 +45,54 @@ function CalendarList() {
     user_id: null,
   });
   const [hostUsers, setHostUsers] = useState<any[]>([]);
-
+  const router = useRouter();
+  const handleGoEdit = (id: number) => {
+    setActiveKey("1");
+    router.push(`/calendar/create?id=${id}`);
+  };
+  const columns: TableColumnsType<DataType> = [
+    {
+      title: "スケジュール名",
+      dataIndex: "name",
+      render: (value, record) => {
+        return (
+          <div className="flex justify-between">
+            <div>{value}</div>
+            <div className="flex gap-x-2">
+              <button
+                className="border px-2 rounded-[4px] cursor-pointer"
+                onClick={() => handleGoEdit(record?.id)}
+              >
+                編集
+              </button>
+              <button
+                className="border px-2 rounded-[4px] cursor-pointer"
+                onClick={() => copyToClipboard(record?.slug)}
+              >
+                リンクをコピー
+              </button>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      title: "主催者",
+      dataIndex: "user_id",
+      render: (_, record) => record.user?.name || record?.user?.email,
+    },
+    { title: "場所名", dataIndex: "address" },
+    {
+      title: "所要時間(分)",
+      dataIndex: "min_booking_schedule",
+      render: (_, record) => `${record.settings.min_booking_schedule}分`,
+    },
+    {
+      title: "ミーティング予約数",
+      dataIndex: "address",
+      render: (_, record) => 5,
+    },
+  ];
   const { data: dataHostUser } = useGetListHostUser({});
   useEffect(() => {
     if (dataHostUser) {
