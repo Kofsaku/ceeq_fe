@@ -68,7 +68,9 @@ function SequenceList() {
     if (!data) {
       return;
     }
-    setDataSequence(data.data.map((item: any) => ({ ...item, key: item.id })));
+    setDataSequence(
+      data.records.map((item: any) => ({ ...item, key: item.id }))
+    );
     setTotal(data.total);
   }, [data]);
 

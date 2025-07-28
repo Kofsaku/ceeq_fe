@@ -9,6 +9,11 @@ import CeeqButton from "@/components/button";
 import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { useGetListAccounts } from "../hooks/use-get-list-accounts";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeleteAccount } from "../hooks/use-delete-account";
+import useAlertModal from "@/hooks/use-alert-modal";
 
 type TableRowSelection<T extends object = object> =
   TableProps<T>["rowSelection"];
@@ -57,6 +62,9 @@ function AccountList() {
     search: "",
     sort_role_id: "asc",
   });
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -84,6 +92,35 @@ function AccountList() {
     });
   };
 
+  const handleEdit = () => {
+    router.push(`/setting/accounts/create?user_id=${selectedRowKeys[0]}`);
+  };
+
+  const { mutate: onDeleteAccount } = useDeleteAccount(
+    (res) => {
+      if (res) {
+        toast.success("アカウント削除成功");
+        queryClient.invalidateQueries({
+          queryKey: ["accounts"],
+        });
+      }
+    },
+    (error) => {
+      toast.error("アカウント削除失敗");
+    }
+  );
+
+  const { confirm, contextHolder } = useAlertModal(
+    "",
+    "本当に削除しますか？",
+    () => {
+      onDeleteAccount(selectedRowKeys as number[]);
+    },
+    () => {},
+    "完了",
+    "キャンセル"
+  );
+
   return (
     <div>
       <div className="bg-[#F2F2F2] p-2 lg:px-[40px] lg:py-2 lg:flex justify-between gap-x-[14px]">
@@ -101,11 +138,18 @@ function AccountList() {
             title="編集"
             className="!bg-transparent !text-[#1A1A1A] !border-none !px-1"
             icon={<EditOutlined />}
+            disabled={
+              selectedRowKeys.length === 0 || selectedRowKeys.length > 1
+            }
+            onClick={handleEdit}
           />
           <CeeqButton
             title="削除"
             className="!bg-transparent !text-[#1A1A1A] !border-none !px-1"
             icon={<DeleteOutlined />}
+            onClick={() => {
+              confirm();
+            }}
           />
         </div>
       </div>
@@ -127,6 +171,7 @@ function AccountList() {
             onChange={onChange}
           />
         </div>
+        {contextHolder}
       </div>
     </div>
   );
