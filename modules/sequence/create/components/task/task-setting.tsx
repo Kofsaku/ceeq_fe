@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input, Select } from "antd";
 import CeeqDatePicker from "@/components/datepicker";
 import DMYSelect from "./dmy-select";
-import { generateTimeOptions } from "../settings";
+import { generateTimeOptions } from "@/utils/generate-data";
 
 function TaskSetting() {
   const onFinish = (values: any) => {
